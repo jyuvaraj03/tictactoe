@@ -1,0 +1,29 @@
+.wrapper {
+    width: 306px;
+    margin:0 auto;
+    border: 3px solid blue;
+}
+.gameboard {
+    width: 300px;
+    height:300px;
+    border:3px solid white;
+    z-index: 1;
+}
+.gameboard div:nth-child(odd) {
+  background-color: #BA7B36;
+}
+.gameboard div:nth-child(even) {
+  background-color: #FAE3AD;
+}
+.gameboard div {
+    width: 100px;
+    height: 100px;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 100px;
+    font-family: 'Seymour One', sans-serif;
+    font-size: 50px;
+}
+
+
