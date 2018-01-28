@@ -1,6 +1,18 @@
+/* Handles all the visual functions as well as call board-functions.
+'X' is maximiser and 'O' is minimizer
+*/
+
+
+
 var board = new Board(),
     won = false,
-    piece, isMax;  //piece to get from user //left as of now
+    pPiece, cPiece, cIsMax;  //piece to get from user //left as of now
+
+//Assigning pPiece and cPiece for now. Get from user later.
+pPiece = 'X';
+cPiece = 'O';
+
+cIsMax = (cPiece === 'X') ? true : false;
 
 $(".square").click(function() {
   var row = parseInt(this.id.slice(-2, -1)),   //slice the second last char which represents row
@@ -11,28 +23,31 @@ $(".square").click(function() {
     return;
 
   if (!won) {
-    board.move(row,col,piece,false);   //false reps a non-pseudo move
-    if(evaluate(xRow, xCol, sqPlayed, 'x')==10){
+    board.move(row,col,pPiece,false);   //false reps a non-pseudo move
+    var boardScore = board.evaluate();
+    if(boardScore === 10 || boardScore === -10){    //check for both 10 and -10 because player can be max or min
       alert('Player Won');
       won = true;
       return;
     }
     
-    if (sqRem.length === 0)
+    if (board.remainingMoves === 0){
       alert('Draw');
+      return;
+    }
     
-    var oPos = sqRem[Math.floor(Math.random()*sqRem.length)],
-        oRow = parseInt(oPos.slice(-2,-1)), 
-        oCol = parseInt(oPos.slice(-1));
-    sqRem.splice(sqRem.indexOf(oPos), 1);
-    sqPlayed[oRow][oCol] = 'o';
-    $(oPos).text('O');
-    if(evaluate(oRow, oCol, sqPlayed, 'o')==-10){
+    //calculating bestmove for comp
+    var bestMove = findBestMove(board, 9-board.remainingMoves, cIsMax);
+    
+    board.move(bestMove.row, bestMove.col, cPiece, false);
+    boardScore = board.evaluate();
+    if(boardScore === 10 || boardScore === -10){    //check for both 10 and -10 because comp can be max or min
       alert('Comp Won');
       won = true;
+      return;
     }
     console.log(sqPlayed);
-    
+   
   }
 });
 

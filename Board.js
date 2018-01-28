@@ -101,47 +101,72 @@ function minimax(board, depth, isMax) {
 }
 
 
-function findBestMove (board, depth) {
+function findBestMove (board, depth, isMax) {
   //console.log("Printing best move");
-  var bestVal = -1000,
+  var bestVal,
       bestMoveRow = null,
       bestMoveCol = null;
+
+  bestVal = isMax ? -1000 : 1000;
+
   for(var i = 0; i < 3; i++){
     for(var j = 0; j < 3; j++) {
       
       if(board.position[i][j] !== null)       //next iteration if not a valid move
         continue;
 
-      board.move(i, j, 'X', true);
-      var value = minimax(board, depth, false);
-      console.log(i, j, value);
-      board.undo(i, j);
+      if(isMax){
 
-      if (value > bestVal){
-        bestVal = value;
-        bestMoveRow = i;
-        bestMoveCol = j;
-        console.log("Assigning bestMove", bestMoveRow, bestMoveCol);
+        board.move(i, j, 'X', true);
+        var value = minimax(board, depth, false);
+        console.log(i, j, value);
+        board.undo(i, j);
+
+        if (value > bestVal){
+          bestVal = value;
+          bestMoveRow = i;
+          bestMoveCol = j;
+          console.log("Assigning bestMove", bestMoveRow, bestMoveCol);
+        }
+
+        console.log(value, bestVal);
       }
+      else {
+        board.move(i, j, 'O', true);
+        var value = minimax(board, depth, true);
+        console.log(i, j, value);
+        board.undo(i, j);
 
-      console.log(value, bestVal);
+        if (value < bestVal){
+          bestVal = value;
+          bestMoveRow = i;
+          bestMoveCol = j;
+          console.log("Assigning bestMove", bestMoveRow, bestMoveCol);
+        }
+
+        console.log(value, bestVal);
+      }
     }
   }
   console.log("Best Move Val: ", bestVal);
   console.log("BestMove Row, Col: ", bestMoveRow, bestMoveCol);
+  return {
+    row: bestMoveRow,
+    col: bestMoveCol
+  };
 }
 
-function main(){
+/*function main(){
   var board = new Board();
-  board.position = [["X", 'O', 'X'],
-                    ['O', 'O', null],
-                    [null, null, null]];
-  board.remainingMoves = 4;
+  board.position = [["X", 'X', 'O'],
+                    ['O', 'O', 'X'],
+                    ['X', null, null]];
+  board.remainingMoves = 2;
   var depth = 9 - board.remainingMoves;
-  findBestMove(board, depth);
+  var bestMove = findBestMove(board, depth, false);
 }
 
 main();
+*/
 
-
-//next to do: find best move for both 'x' and 'o'
+//Do no more changes
